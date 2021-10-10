@@ -2,7 +2,7 @@
 A simple QR-code generator.
 
 ## Installation instructions.
-**In order to compile this program you must have jdk1.8 properly installed.**
+**\*Note: In order to compile this program you must have jdk1.8 properly installed.**
 
 To compile this program issue the following commands in a terminal session:
 1. `git clone https://github.com/nikofabelo/javaQR-generator`
