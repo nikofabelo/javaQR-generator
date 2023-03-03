@@ -32,6 +32,9 @@ import javax.swing.event.DocumentListener;
 import org.apache.commons.lang3.SystemUtils;
 
 public class MainFrame extends Frame {
+    static Panel panel;
+    static String qrCodePath;
+
     public MainFrame() {
         super("javaQR-generator v1.1");
         addWindowListener(new WindowAdapter() {
@@ -42,7 +45,7 @@ public class MainFrame extends Frame {
         });
     }
 
-    public static void loadQRCode(Panel panel, String qrCodePath, String text)
+    public static void loadQRCode(String text)
         throws IOException, WriterException {
 
         BitMatrix matrix = new MultiFormatWriter().encode(
@@ -62,7 +65,6 @@ public class MainFrame extends Frame {
     }
 
     public static void main(String[] argv) throws FontFormatException, IOException,  WriterException {
-        String qrCodePath;
         if(System.getProperty("java.io.tmpdir").endsWith(FileSystems.getDefault().getSeparator()))
             qrCodePath = System.getProperty("java.io.tmpdir")+"7ef9bc548e469b19b59f321add02d4c0";
         else
@@ -86,7 +88,7 @@ public class MainFrame extends Frame {
         BufferedImage appIcon = ImageIO.read(imgStream);
         mainFrame.setIconImage(appIcon);
 
-        Panel panel = new Panel();
+        panel = new Panel();
         panel.setLayout(new GridLayout(1, 2));
 
         JTextArea textArea = new JTextArea();
@@ -102,7 +104,7 @@ public class MainFrame extends Frame {
         textArea.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                try { loadQRCode(panel, qrCodePath, textArea.getText()); }
+                try { loadQRCode(textArea.getText()); }
                 catch(IOException | IllegalArgumentException | WriterException ex) {
                     JOptionPane.showMessageDialog(new JFrame(),
                         "Something happened while generating QR-code.\nERROR: "+ex.getMessage(),
@@ -112,7 +114,7 @@ public class MainFrame extends Frame {
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                try { loadQRCode(panel, qrCodePath, textArea.getText()); }
+                try { loadQRCode(textArea.getText()); }
                 catch(IOException | IllegalArgumentException | WriterException ex) {
                     if(!ex.getMessage().contains("empty contents"))
                         JOptionPane.showMessageDialog(new JFrame(),
@@ -128,8 +130,7 @@ public class MainFrame extends Frame {
         });
 
         panel.add(new JScrollPane(textArea));
-        loadQRCode(panel, qrCodePath,
-            "javaQR-generator v1.1, made in Cuba with Linux-GNU.\n"
+        loadQRCode("javaQR-generator v1.1, made in Cuba with Linux-GNU.\n"
             + "A simple QR-code generator.\n\n"
             + "Copyright © 2021- Yoel N. Fabelo.\n"
             + "License GPLv3+: GNU GPL version 3 or later\n"
